@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/main.css">
+    <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Ponderada S7</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Ponderada S7</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" target="_self" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" target="_self" href="/get_saved_positions">Posições</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" target="_self" href="/get_logs">Logs</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1 class="title text-secondary">Bem-vindo à Ponderada do Cailão!</h1>
+
+        <section class="moviment-section">
+            <h3>Movimentos</h3>
+            <form action="/move_to" class="moviment-form" method="post">
+                <div class="row g-3">
+                    <div class="col-sm">
+                        <label for="x" class="form-label">X:</label>
+                        <input type="number" class="form-control" id="x" name="x">
+                    </div>
+                    <div class="col-sm">
+                        <label for="y" class="form-label">Y:</label>
+                        <input type="number" class="form-control" id="y" name="y">
+                    </div>
+                    <div class="col-sm">
+                        <label for="z" class="form-label">Z:</label>
+                        <input type="number" class="form-control" id="z" name="z">
+                    </div>
+                    <div class="col-sm">
+                        <label for="r" class="form-label">R:</label>
+                        <input type="number" class="form-control" id="r" name="r">
+                    </div>
+                </div>
+
+                <div class="container mt-4 text-center">
+                    <button class="btn btn-success mt-4 col" type="submit">Enviar Movimento</button>
+                    <input type="button" hx-get="/connect_arm" value="Connectar" class="btn btn-primary mt-4 col" id="btn-connect">
+                    <input type="button" hx-get="/disconnect_arm" value="Disconnect" class="btn btn-danger mt-4 col" id="btn-disconnect">
+                </div>
+            </form>
+        </section>
+    </div>
+</body>
+</html>

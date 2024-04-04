@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Bootstrap and HTMX Scripts -->
+    <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-mrGIlLLnJjNHRiqtRwFYdPj4FgiCmJewoWr31DPO8XrAYq3yuheihX4c+5jpP+l" crossorigin="anonymous"></script>
+    <style>
+        /* Custom style for the hover effect */
+        .positions {
+            transition: background-color 0.3s ease; /* Smooth transition */
+            cursor: pointer; /* Change cursor to pointer on hover */
+            border: 1px solid #b3b4b4; /* Add border */
+            border-radius: 5px; /* Add border radius */
+            margin: 10px; /* Add margin between list items */
+            padding: 10px; /* Add padding */
+            background-color: #fff; /* White background */
+        }
+
+        .positions:hover {
+            background-color: #f8f9fa; /* Light gray background color on hover */
+        }
+    </style>
+    <title>Ponderada S7 - Saved Positions</title>
+</head>
+<body hx-boost="true" hx-trigger="every 3600s" hx-get="/get_saved_positions" hx-target="this">
+
+    <!-- Log Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Ponderada S7</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" target="_self" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" target="_self" href="/get_saved_positions">Posições</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" target="_self" href="/get_logs">Logs</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Position Form -->
+    <div class="container mt-4">
+        <form method="post" action="/save_position">
+            <div class="row align-items-center">
+                <div class="col">
+                    <input type="text" name="position-name" class="form-control" placeholder="Position name">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Positions List -->
+        <ul id="positions-list">
+            {% for position in positions %}
+            <li class="positions">    
+                <div class="row">
+                    <div class="col">{{ position['name'] }}</div>
+                    <div class="col">X: {{ position['x'] }}</div>
+                    <div class="col">Y: {{ position['y'] }}</div>
+                    <div class="col">Z: {{ position['z'] }}</div>
+                    <div class="col">R: {{ position['r'] }}</div>
+                    <div class="col-auto">
+                        <input type="button" value="move" hx-post="/move_to_saved_position/{{ position['name'] }}" hx-target="#positions-list" class="btn btn-primary btn-sm">
+                        <input type="button" value="delete" hx-delete="/delete_saved_position/{{ position['name'] }}" hx-target="#positions-list" class="btn btn-danger btn-sm">
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    
+</body>
+</html>
