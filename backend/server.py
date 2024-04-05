@@ -37,16 +37,24 @@ def index():
     return render_template("index.html")
 
 
-from flask import jsonify
-
 @server.route("/check_bot_status")
 def check_bot_status():
-    # Retrieve bot status and CSS style from wherever you store them
-    bot_status = "Connected"  # Example bot status
-    css_style = "text-success"  # Example CSS style for connected status
-
-    # Return the bot status and CSS style as JSON data
-    return jsonify(bot_status=bot_status, css_style=css_style)
+    try:
+        if bot and bot.status:
+            if bot.status == "Connected":
+                return """<span class="nav-link active" id="bot_status_text">Bot Status: </span>
+                          <p class="center text-success" id="bot_status_value">Connected</p>"""
+            elif bot.status == "Disconnected":
+                return """<span class="nav-link active" id="bot_status_text">Bot Status: </span>
+                          <p class="center text-danger" id="bot_status_value">Disconnected</p>"""
+            else:
+                return """<span class="nav-link active" id="bot_status_text">Bot Status: </span>
+                          <p class="center" id="bot_status_value">Unknown</p>"""
+        else:
+            return """<span class="nav-link active" id="bot_status_text">Bot Status: </span>
+                      <p class="center" id="bot_status_value">Bot not available</p>"""
+    except Exception as e:
+        return f"Internal Server Error: {e}", 500  
 
 
 @server.route("/connect_arm")
@@ -58,6 +66,8 @@ def connect_bot():
         port = available_ports[0].device 
         global bot 
         bot = CaioBot(port, False)
+
+        bot.status = "Connected"
 
         return redirect("/")
     except KeyError as e:
@@ -73,6 +83,8 @@ def disconnect_bot():
         fail_message(f"{e}", 1.5)
         connect_bot()
         bot._disconnect()
+    
+    bot.status = "Disconnected"
 
     return redirect("/")
 
