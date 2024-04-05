@@ -7,8 +7,8 @@ import datetime
 server = Flask(__name__)
 
 # Initialize TinyDB databases
-logs = TinyDB('db/logs.json')
-positions = TinyDB('db/positions.json')
+logs = TinyDB('../db/logs.json')
+positions = TinyDB('../db/positions.json')
 
 # Global variable to store the bot instance
 bot = None
